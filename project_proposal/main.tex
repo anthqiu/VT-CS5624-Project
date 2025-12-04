@@ -1,0 +1,237 @@
+\documentclass[sigconf,authorversion,nonacm]{acmart}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{lmodern}
+\usepackage[htt]{hyphenat}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp}
+\else
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\makeatother
+
+\begin{document}
+
+\title{Semantic Polarization in Broadcast News (2015–2025)}
+
+\author{Shi Qiu}
+\affiliation{
+  \institution{Virginia Tech}
+  \city{Alexandria, VA}
+  \country{USA}
+}
+\email{shiqiu@vt.edu}
+
+\author{Zechen Li}
+\affiliation{
+  \institution{Virginia Tech}
+  \city{Alexandria, VA}
+  \country{USA}
+}
+\email{lzechen@vt.edu}
+
+% \begin{abstract}
+% 1
+% \end{abstract}
+
+% \keywords{1}
+
+\maketitle
+
+\section{Project Idea}\label{proj-idea}
+
+We will investigate semantic polarization in broadcast news language, inspired by the first 2 studies conducted by Ding \textit{et al.}\cite{Ding_Horning_Rho_2023}. Our research aims to reproduce and expand upon the original study by analyzing updated data (2015-2025) and applying the latest NLP methods. We will quantitatively compare whether the conclusions drawn from the original study using data up to 2020 will still be valid in 2025, and whether the new NLP methods can yield more accurate conclusions. Specifically, we will conduct: 
+
+\textbf{Study 1:} This study focuses on quantifying the growing partisan media gap by measuring how CNN and Fox News discuss identical keywords over a decade. The core implementation involves fine-tuning a RoBERTa model on an sentiment dataset\cite{liu2019robertarobustlyoptimizedbert}. This classified model is applied to the corpus to generate a time-series of affective bias, which allows us to track the evolution of media framing bias using NLP.
+
+\textbf{Study 2:} Identify which words(tokens) characterize the differences in how CNN vs. Fox discuss those keywords. We will train classifiers to predict if a news piece came from CNN for Fox, and then interpret the model to find the tokens that mostly contributes to each classifiers. By comparing different classifiers, we can test the robustness of these linguistic markers.
+
+\section{Motivation}\label{motivation}
+
+Original research measured polarization using BERT embeddings, but failed to explicitly quantify the emotional or affective stance of the two networks. Our primary motivation is to fill this gap by introducing the Supervised Sentiment Polarization metric. SSP provides a concrete, interpretable value that directly reflects the media's affective bias\cite{Liu2012Sentiment}. This is highly relevant as affective framing significantly influences audience perception.
+
+Additionally, we want to examine whether using different embedding models and classifiers can improve the detection of semantic differences or provide any new insights. We hope to examine whether the results in the original paper depend on a specific method by replacing the model used in the original paper, and whether replacing the model can bring better performance or interpretability.
+
+Furthermore, the original study's data ended in 2020. During the Q\&A session of our paper presentation, questions arose regarding whether the results would change with the data scope. This prompted us to update the analysis to 2015-2025: Since 2020, has this polarization trend continued, intensified, or reversed? By extending the time frame, we can test the robustness of the original study's results and observe whether new events (such as election results and policy changes) affect semantic polarization.
+
+\section{Dataset}\label{dataset}
+
+Our dataset consists of TV news transcripts from CNN\cite{DVN/ISDPJU_2017} and Fox News\cite{DVN/Q2KIES_2022} covering the years 2003 through 2025. We will only use data after 2015 to limit the proejct scope. Ultimately, we filtered out approximately 145,000 CNN transcripts and 40,000 Fox News transcripts.
+
+CNN transcripts are stored in structured CSV format. Each row contains a headline, the full text, and some metadata fields including year of publishing.
+
+Fox News transcripts are 
+
+Following the original study, we will focus on transcripts that mention any of several politically charged keywords across three core topics:
+
+\begin{itemize}
+    \item \textit{Racism}: e.g., occurrences of “racism” or “racist”
+    \item \textit{Law Enforcement}: terms like “police”
+    \item \textit{Immigration}: terms “immigration” or “immigrant”
+\end{itemize}
+
+\section{Example for Dataset}
+\begin{table}[htbp]
+\caption{Sample Fox News Transcripts (2022)}
+\label{tab:fox_examples}
+\small
+\begin{tabular}{lp{4cm}}
+\toprule
+\textbf{Date} & \textbf{Guests} \\
+\midrule
+2022-05-29 & Mo Brooks, Olivia Beavers, Ben Cardin \\
+2022-05-22 & Brian Deese, Julie Pace, Ronna McDaniel \\
+2022-04-17 & Kevin McCarthy, Ashish Jha \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% CNN Sample Entries - single column table
+\begin{table}[htbp]
+\caption{Sample CNN Transcripts (2022)}
+\label{tab:cnn_examples}
+\small
+\begin{tabular}{lp{4cm}}
+\toprule
+\textbf{Date} & \textbf{Topic Coverage} \\
+\midrule
+2022-05-29 & Immigration policy debate \\
+2022-05-22 & Law enforcement relations \\
+2022-04-17 & Racism and social justice \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Sample Transcript Entries from Both Networks - suitable for ACM two-column format
+
+% Dataset Statistics - compact format for ACM two-column
+\begin{table}[htbp]
+\caption{Dataset Statistics (2015-2025)}
+\label{tab:dataset_stats}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{CNN} & \textbf{Fox News} \\
+\midrule
+Total Transcripts & $\sim$145,000 & $\sim$40,000 \\
+Coverage Period & 2003-2025 & 2003-2025 \\
+Analysis Focus & 2015-2025 & 2015-2025 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Target Keywords by Topic - ACM format
+\begin{table}[htbp]
+\caption{Target Keywords by Topic Category}
+\label{tab:keywords}
+\begin{tabular}{ll}
+\toprule
+\textbf{Topic} & \textbf{Keywords} \\
+\midrule
+Racism & ``racism'', ``racist'' \\
+Law Enforcement & ``police'' \\
+Immigration & ``immigration'', ``immigrant'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Example sentences containing keywords from both networks
+\begin{table}[htbp]
+\caption{Keyword Usage Examples}
+\label{tab:keyword_examples}
+\small
+\begin{tabular}{lp{4.5cm}}
+\toprule
+\textbf{Network} & \textbf{Example Context} \\
+\midrule
+\multicolumn{2}{l}{\textit{Immigration:}} \\
+Fox News & debate over policy \\
+CNN & immigrant families \\
+\midrule
+\multicolumn{2}{l}{\textit{Police:}} \\
+Fox News & recruitment challenges \\
+CNN & reform accountability \\
+\midrule
+\multicolumn{2}{l}{\textit{Racism:}} \\
+Fox News & political accusations \\
+CNN & systemic issues \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Data Fields Description - ACM format (single column)
+\begin{table}[htbp]
+\caption{Data Fields Used in Analysis}
+\label{tab:data_fields}
+\small
+\begin{tabular}{lp{4.5cm}}
+\toprule
+\textbf{Field} & \textbf{Description} \\
+\midrule
+Title & Episode title \\
+Publication Date & Date published (YYYY-MM-DD) \\
+Description & Episode summary and guests \\
+Full Text & Complete transcript text \\
+Year & Publication year \\
+Network & CNN or Fox News \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Studies}\label{studies}
+
+Our project will be divided into two parts corresponding to Study 1 (semantic polarization over time) and Study 2 (finding key words to distinguish CNN and Fox News) from the original paper, with improved or alternative NLP methods for each.
+
+\subsection{Study 1}\label{study-1}
+
+This is the core innovative contribution, directly measuring polarization as the absolute difference in the affective (sentiment) stance adopted by the two networks towards the keyword.
+
+\textbf{Sentiment Classification:} A state-of-the-art \textbf{RoBERTa-base} model will be fine-tuned on an external, sentiment dataset to classify each sentence as having a Positive or Negative affective score\cite{liu2019robertarobustlyoptimizedbert}.
+
+\textbf{Polarization Metric (SSP):} We calculate the average sentiment score ($\bar{S}$) for each network and define the SSP as the absolute difference between these averages:
+
+\begin{equation}
+\label{eq:ssp}
+\text{SSP}(w, t) = | \bar{S}_{\text{CNN}}(w, t) - \bar{S}_{\text{Fox}}(w, t) |
+\end{equation}
+
+\subsection{Study 2}\label{study-2}
+
+In Study 2, we will reproduce the identification of which tokens distinguish between CNN and Fox reports when discussing the same topic. In the original study, the authors trained BERT-based classifiers (one per topic) using 2020 data to predict whether a given sentence came from CNN or Fox. They then used integrated gradient (IG) to find the tokens that contributed most to each classification. To this end, we plan to try several different classification methods and compare their results.
+
+When performing the classification task, we first reproduce the BERT classifier implemented in the original paper. By comparing the 2020 data with the metrics from the original study, we can verify whether we have accurately reproduced the implementation in the original paper. As a comparative method, we additionally train a simpler SVM classifier using TF-IDF on the same task. While the linear model is not as powerful as BERT, it is more interpretable and can directly indicate which words have a stronger effect on the classification task. This can serve as a baseline for plausibility and interpretability. We expect that even the logistic model will capture a clear signal. Finally, we plan to experiment with improved BERT-based models, such as RoBERTa\cite{liu2019robertarobustlyoptimizedbert}, to test whether they can improve performance on classification tasks.
+
+Then, we apply IG to the best-performing classifier, which assigns an importance score to each word(token) in the input sentence, indicating the token's "CNN" bias in the model's predictions. By averaging these attribution results across multiple samples, we can determine which tokens in each topic have the strongest linguistic association with CNN and which have the strongest linguistic association with Fox. We will reproduce the results from 2020 to verify the accuracy of our obtained classification tokens. Then, we will extend our research to other years from 2021-2025, performing attribution on data for each year to further examine whether the distinguishing tokens change over time.
+
+\section{Metrics}\label{metrics}
+
+In this section, we summarize the metrics we use to determine the performance of each study.
+
+\subsection{Study 1} 
+
+\textbf{Sentiment Polarization Time Series}: Generate the annual SSP score for each keyword across the decade.
+
+\textbf{Coherence \& Correlation}: We will compute the SSP scores against the previously established Semantic Polarization  scores to analyze the internal correlation between these two distinct metrics.
+
+\textbf{Success Measurement}: Study 1 is successful if the SSP time series demonstrates a clear, increasing polarization trend, corroborating the SP baseline and known external political events.
+
+\subsection{Study 2}
+
+In Study 2, we will use standard classification metrics to ensure that our models can distinguish between CNN and Fox statements. We will reserve a subset of data for each topic as a test set. The metrics we will use include accuracy and F1-score. The BERT classifier in the original study achieved approximately 70-75\% accuracy, indicating that this is a learnable but not easy task. If our best model achieves similar or higher performance (e.g., $\geq$ 75\% accuracy) on each topic subset, we will consider our reproduction successful. As a baseline comparison, we expect TF-IDF performance to be slightly lower, but if the two are similar, it is worth noting.
+
+Since a key outcome of Study 2 is the list of distinguishing tokens for each network, we will evaluate the meaningfulness of these tokens. We will examine whether the top tokens identified by our method align with intuition or historical records. For example, if our 2020 analysis (using BERT and IG) produces the same types of tokens reported in the original paper, such as describing Fox as "illegal" (referring to immigration) or CNN as "family," then we consider this validating of our method. We can roughly measure the overlap between the top 10 words in our model and the top 10 words in the paper (if any). The ultimate criterion for success is whether our findings can explain the polarization calculated in Study 1.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}
