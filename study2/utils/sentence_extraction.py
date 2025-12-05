@@ -15,12 +15,6 @@ def normalize_text(text: str) -> str:
 
 
 def _process_chunk_to_file(args):
-    """
-    子进程处理一个 chunk：
-    - 对每一行 transcript 切句
-    - 写出到独立的 CSV 文件
-    - 返回 (chunk_id, out_path, n_sentences)
-    """
     chunk_id, chunk_df, output_dir = args
 
     os.makedirs(output_dir, exist_ok=True)
@@ -60,12 +54,6 @@ def split_to_sentences(
     n_procs: int | None = None,
     min_chunk_size: int = 1000
 ):
-    """
-    多进程切句并写盘：
-    - 不返回一个大 DataFrame，避免内存爆
-    - 把句子按 chunk 写到多个 CSV 中
-    - 返回 [(chunk_id, out_path, n_sentences), ...]
-    """
     if n_procs is None:
         n_procs = max(cpu_count() - 1, 1)
 
@@ -79,7 +67,6 @@ def split_to_sentences(
 
     print(f"[split_to_sentences] rows={n_rows}, n_procs={n_procs}")
 
-    # 只保留必要列，减少进程间传输
     df = df[["ts", "year", "network", "text"]]
 
     chunks = np.array_split(df, n_procs)

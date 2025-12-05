@@ -3,7 +3,6 @@ import os
 
 from utils.data_prep import load_cnn_fox
 from utils.sentence_extraction import split_to_sentences, filter_by_topic
-from utils.config import TOPIC_KEYWORDS
 
 if __name__ == "__main__":
     cnn_df, fox_df = load_cnn_fox()

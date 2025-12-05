@@ -23,6 +23,18 @@ OUTPUT_ROOT = "checkpoints/mlm"
 BASE_MODEL_NAME = "bert-base-uncased"
 # BASE_MODEL_NAME = "roberta-base"
 
+def get_tokenizer_and_model():
+    if BASE_MODEL_NAME.startswith("bert"):
+        tokenizer = BertTokenizerFast.from_pretrained(BASE_MODEL_NAME)
+        model = BertForMaskedLM.from_pretrained(BASE_MODEL_NAME)
+    elif BASE_MODEL_NAME.startswith("roberta"):
+        tokenizer = RobertaTokenizerFast.from_pretrained(BASE_MODEL_NAME)
+        model = RobertaForMaskedLM.from_pretrained(BASE_MODEL_NAME)
+    else:
+        raise Exception(f"Unknown base model: {BASE_MODEL_NAME}")
+
+    return tokenizer, model
+
 RANDOM_SEED = 42
 
 
@@ -93,14 +105,8 @@ def train_mlm_for_topic(topic: str):
         print(f"[{topic}] Train size: {len(train_dataset)}, Eval size: {len(eval_dataset)}")
 
     print(f"[{topic}] Loading tokenizer & base model: {BASE_MODEL_NAME}")
-    if BASE_MODEL_NAME.startswith("bert"):
-        tokenizer = BertTokenizerFast.from_pretrained(BASE_MODEL_NAME)
-        model = BertForMaskedLM.from_pretrained(BASE_MODEL_NAME)
-    elif BASE_MODEL_NAME.startswith("roberta"):
-        tokenizer = RobertaTokenizerFast.from_pretrained(BASE_MODEL_NAME)
-        model = RobertaForMaskedLM.from_pretrained(BASE_MODEL_NAME)
-    else:
-        raise Exception(f"Unknown base model: {BASE_MODEL_NAME}")
+
+    tokenizer, model = get_tokenizer_and_model()
 
     # Tokenization
     def _tok_fn(batch):
@@ -135,7 +141,6 @@ def train_mlm_for_topic(topic: str):
     fp16 = torch.cuda.is_available()
     print(f"[{topic}] Using CUDA: {torch.cuda.is_available()}, fp16={fp16}")
 
-    # 这里的超参数可以根据你的实际数据量调整
     training_args = TrainingArguments(
         output_dir=output_dir,
         overwrite_output_dir=True,
