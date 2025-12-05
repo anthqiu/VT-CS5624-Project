@@ -26,3 +26,13 @@ if __name__=="__main__":
             df.to_csv(os.path.join(OUTPUT_DIR, f"topic_{key}_{year}.csv"), index=False)
         del dataset
         gc.collect()
+
+    del sentences
+
+    for topic in TOPIC_KEYWORDS:
+        years = []
+        for year in range(2015,2025):
+            df = pd.read_csv(os.path.join(OUTPUT_DIR, f"topic_{topic}_{year}.csv"))
+            years.append(df)
+        topic_df: pd.DataFrame = pd.concat(years, ignore_index=True)
+        topic_df.to_csv(os.path.join(OUTPUT_DIR, f"topic_{topic}.csv"), index=False)
