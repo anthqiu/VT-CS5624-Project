@@ -1,2 +1,4 @@
 data/*.csv
 data/foxnews*/
+study2/checkpoints/
+.idea/
