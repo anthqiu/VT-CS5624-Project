@@ -20,8 +20,8 @@ from transformers import (
 TOPIC_DIR = "checkpoints/topics"
 OUTPUT_ROOT = "checkpoints/mlm"
 
-BASE_MODEL_NAME = "bert-base-uncased"
-# BASE_MODEL_NAME = "roberta-base"
+# BASE_MODEL_NAME = "bert-base-uncased"
+BASE_MODEL_NAME = "roberta-base"
 
 def get_tokenizer_and_model():
     if BASE_MODEL_NAME.startswith("bert"):

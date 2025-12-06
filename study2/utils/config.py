@@ -6,3 +6,6 @@ TOPIC_KEYWORDS = {
     # "climate": ["climate change", "global warming"],
     # "healthcare": ["health care"],
 }
+
+BASE_MODEL_NAME = "roberta-base"
+# BASE_MODEL_NAME = "bert-base-uncased"

@@ -17,12 +17,12 @@ from transformers import (
     Trainer
 )
 
-BASE_MODEL_NAME = "bert-base-uncased"
-# BASE_MODEL_NAME = "roberta-base"
+# BASE_MODEL_NAME = "bert-base-uncased"
+BASE_MODEL_NAME = "roberta-base"
 
 TOPIC_DIR = "checkpoints/topics"
-MLM_ROOT = "checkpoints/mlm"
-CLASSIFIER_ROOT = "checkpoints/classifier"
+MLM_ROOT = os.path.join("checkpoints/mlm", BASE_MODEL_NAME)
+CLASSIFIER_ROOT = os.path.join("checkpoints/classifier", BASE_MODEL_NAME)
 
 YEARS = list(range(2015, 2025))
 from utils.config import TOPIC_KEYWORDS
@@ -40,7 +40,7 @@ def set_seed(seed=42):
 
 
 def get_tokenizer_and_model_for_topic(topic: str):
-    mlm_dir = os.path.join(MLM_ROOT, BASE_MODEL_NAME, topic)
+    mlm_dir = os.path.join(MLM_ROOT, topic)
     if not os.path.isdir(mlm_dir):
         raise FileNotFoundError(f"MLM checkpoint not found: {mlm_dir}")
 
